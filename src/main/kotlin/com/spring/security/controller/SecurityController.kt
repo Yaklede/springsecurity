@@ -12,7 +12,22 @@ class SecurityController {
     }
 
     @GetMapping("/loginPage")
-    fun loginPage() : String {
+    fun loginPage(): String {
         return "loginPage"
+    }
+
+    @GetMapping("/user")
+    fun user(): String {
+        return "user"
+    }
+
+    @GetMapping("/sys")
+    fun sys(): String {
+        return "sys"
+    }
+
+    @GetMapping("/admin")
+    fun admin(): String {
+        return "admin"
     }
 }
