@@ -3,3 +3,18 @@ spring:
     user:
       name: 'user'
       password: '0000'
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    database: h2
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
