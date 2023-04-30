@@ -15,7 +15,9 @@ class DefaultLoginFailHandler : AuthenticationFailureHandler {
     ) {
         infoLog {
             "authentication Fail"
+            "exception message ${exception.message}"
         }
+
         response.sendRedirect("/login")
     }
 }
