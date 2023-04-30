@@ -1,4 +1,4 @@
-package com.spring.security.domain.member
+package com.spring.security.domain.member.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
