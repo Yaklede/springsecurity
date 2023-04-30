@@ -4,56 +4,47 @@ import com.spring.security.handler.login.DefaultLoginFailHandler
 import com.spring.security.handler.login.DefaultLoginSuccessHandler
 import com.spring.security.handler.logout.DefaultLogoutHandler
 import com.spring.security.handler.logout.DefaultLogoutSuccessHandler
-import com.spring.security.infoLog
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
-import org.slf4j.LoggerFactory
+import com.spring.security.provider.CustomAuthenticationProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.config.annotation.authentication.configurers.provisioning.UserDetailsManagerConfigurer.UserDetailsBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.AuthenticationException
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.AuthenticationFailureHandler
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler
-import org.springframework.security.web.authentication.logout.LogoutHandler
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
+
 
 
 @Configuration
-class SecurityConfig {
-
+@EnableWebSecurity
+class SecurityConfig{
     @Bean
-    fun userDetailsService(): UserDetailsService {
-        val userDetails =
-        val users = User.withUserDetails()
-    }
-
-    @Bean
-    fun configurer(manager: AuthenticationManagerBuilder) {
-        manager.inMemoryAuthentication().withUser("user").password("{noop}1111").roles("USER")
-        manager.inMemoryAuthentication().withUser("sys").password("{noop}1111").roles("SYS", "USER")
-        manager.inMemoryAuthentication().withUser("admin").password("{noop}1111").roles("ADMIN", "SYS", "USER")
+    fun authManager(http: HttpSecurity): AuthenticationManager {
+        val provider = http.getSharedObject(AuthenticationManagerBuilder::class.java)
+        provider.authenticationProvider(CustomAuthenticationProvider())
+        return provider.orBuild
     }
 
     @Bean
     fun configurer(http: HttpSecurity): SecurityFilterChain {
-        //인가 정책
-        http
-            .authorizeHttpRequests()
-            .anyRequest()
-            .authenticated()
-
         //권한 설정
         http
             .authorizeHttpRequests()
-            .requestMatchers("/user").hasRole("USER")
-            .requestMatchers("/sys").hasRole("SYS")
-            .requestMatchers("/admin").hasRole("ADMIN")
+            .requestMatchers("/user").hasRole("ROLE_USER")
+            .requestMatchers("/sys").hasRole("ROLE_SYS")
+            .requestMatchers("/admin").hasRole("ROLE_ADMIN")
+
+        //인가 정책
+        http
+            .authorizeHttpRequests()
+            .requestMatchers("/join")
+            .permitAll()
+
+        http
+            .authorizeHttpRequests()
+            .anyRequest().authenticated()
 
         //인증 정책 default form 인증
         http
@@ -66,6 +57,7 @@ class SecurityConfig {
             .successHandler(DefaultLoginSuccessHandler())
             .failureHandler(DefaultLoginFailHandler())
             .permitAll() //인증이 되어 있지 않아도 접근이 가능함
+
 
         //logout
         http
@@ -82,7 +74,11 @@ class SecurityConfig {
             .maximumSessions(1) // 최대 세션 1개
             .maxSessionsPreventsLogin(true) // 1개 이후에는 더이상 세션이 생기지 않도록 즉 2번째 요청부터 로그인을 막음 false일 땐 기존 사용자 로그아웃
 
-
         return http.orBuild
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder(16)
     }
 }
