@@ -1,6 +1,6 @@
 package com.spring.security.domain.member.service
 
-import com.spring.security.domain.member.MemberDetails
+import com.spring.security.domain.member.entity.MemberDetails
 import com.spring.security.domain.member.repository.MemberRepository
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
-class CustomUserDetailsService(
+class MemberDetailsService(
     private val memberRepository: MemberRepository
 ): UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails {
