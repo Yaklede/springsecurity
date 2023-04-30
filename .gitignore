@@ -6,6 +6,44 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
-.idea
 .yml
 .propertise
+.gradle
+build
+.idea
+HELP.md
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+*.iws
+*.iml
+*.ipr
+*.properties
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+gradle
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
