@@ -1,6 +1,5 @@
-package com.spring.security.domain.member
+package com.spring.security.domain.member.entity
 
-import com.spring.security.domain.member.entity.Member
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
