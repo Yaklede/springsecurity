@@ -34,7 +34,6 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 }
-
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
@@ -44,4 +43,14 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks {
+	val cleanGeneratedSources by creating(Delete::class) {
+		delete("src/main/generated")
+	}
+
+	named("clean") {
+		dependsOn(cleanGeneratedSources)
+	}
 }
