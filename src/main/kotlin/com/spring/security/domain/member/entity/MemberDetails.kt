@@ -24,7 +24,7 @@ class MemberDetails(
     }
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return roles.stream().map { role -> SimpleGrantedAuthority("ROLE_$role") }.collect(Collectors.toSet())
+        return roles.stream().map { role -> SimpleGrantedAuthority("ROLE_${role.role}") }.collect(Collectors.toSet())
     }
 
     override fun getPassword(): String {

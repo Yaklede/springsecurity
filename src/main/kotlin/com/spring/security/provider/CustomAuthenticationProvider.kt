@@ -30,7 +30,7 @@ class CustomAuthenticationProvider: AuthenticationProvider {
         if (!passwordEncoder.matches(password, member.password)) throw BadCredentialsException("패스워드가 일치하지 않습니다.")
 
         //로그인 성공시 token 발급
-        return UsernamePasswordAuthenticationToken(authentication.principal, null, authentication.authorities)
+        return UsernamePasswordAuthenticationToken(member, null, member.authorities)
     }
 
     override fun supports(authentication: Class<*>): Boolean {

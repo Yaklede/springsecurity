@@ -1,5 +1,8 @@
 package com.spring.security.config
 
+import com.spring.security.handler.access.CustomAccessDeniedHandler
+import com.spring.security.handler.authentication.CustomAuthenticationFailureHandler
+import com.spring.security.handler.authentication.CustomAuthenticationSuccessHandler
 import com.spring.security.handler.login.DefaultLoginFailHandler
 import com.spring.security.handler.login.DefaultLoginSuccessHandler
 import com.spring.security.handler.logout.DefaultLogoutHandler
@@ -16,10 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 
 
-
 @Configuration
 @EnableWebSecurity
-class SecurityConfig{
+class SecurityConfig {
     @Bean
     fun authManager(http: HttpSecurity): AuthenticationManager {
         val provider = http.getSharedObject(AuthenticationManagerBuilder::class.java)
@@ -32,14 +34,14 @@ class SecurityConfig{
         //권한 설정
         http
             .authorizeHttpRequests()
-            .requestMatchers("/user").hasRole("ROLE_USER")
-            .requestMatchers("/sys").hasRole("ROLE_SYS")
-            .requestMatchers("/admin").hasRole("ROLE_ADMIN")
+            .requestMatchers("/user").hasRole("USER")
+            .requestMatchers("/sys").hasRole("SYS")
+            .requestMatchers("/admin").hasRole("ADMIN")
 
         //인가 정책
         http
             .authorizeHttpRequests()
-            .requestMatchers("/join")
+            .requestMatchers("/join", "/exception", "/denied")
             .permitAll()
 
         http
@@ -55,14 +57,19 @@ class SecurityConfig{
             .passwordParameter("password")
             .loginProcessingUrl("/login_proc")
             .successHandler(DefaultLoginSuccessHandler())
+            .successHandler(CustomAuthenticationSuccessHandler())
             .failureHandler(DefaultLoginFailHandler())
+            .failureHandler(CustomAuthenticationFailureHandler())
             .permitAll() //인증이 되어 있지 않아도 접근이 가능함
+            .and()
+            .exceptionHandling()
+            .accessDeniedHandler(CustomAccessDeniedHandler())
 
 
         //logout
         http
             .logout() // logout
-            .logoutUrl("/logout") //logout request url
+            //.logoutUrl("/logout") //logout request url
             .logoutSuccessUrl("/login") // logout Success Redirect Url
             .addLogoutHandler(DefaultLogoutHandler()) // 로그아웃 요청시 동작하는 handler
             .logoutSuccessHandler(DefaultLogoutSuccessHandler()) //로그아웃 성공시 동작하는 handler
